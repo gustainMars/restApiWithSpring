@@ -1,6 +1,8 @@
 package br.com.gustainMars.controllers;
 
 import br.com.gustainMars.exception.UnsupportedMathOperationException;
+import br.com.gustainMars.services.MathService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,30 +10,53 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/math")
 public class MathController {
+    @Autowired
+    private MathService service;
 
     @RequestMapping("/sum/{numberOne}/{numberTwo}")
     public Double sum(
             @PathVariable("numberOne") String numberOne,
             @PathVariable("numberTwo") String numberTwo
     ) throws UnsupportedMathOperationException {
-        return convertToDouble(numberOne) + convertToDouble(numberTwo);
+        return service.sum(numberOne, numberTwo);
     }
 
-    private Double convertToDouble(String strNumber) throws UnsupportedMathOperationException {
-        if (isNotNumeric(strNumber)) {
-            throw new UnsupportedMathOperationException("Please set a numeric value!");
-        }
-
-        String number = strNumber.replace(",", ".");
-        return Double.parseDouble(number);
+    @RequestMapping("/subtraction/{numberOne}/{numberTwo}")
+    public Double subtraction(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws UnsupportedMathOperationException {
+        return service.subtraction(numberOne, numberTwo);
     }
 
-    private boolean isNotNumeric(String strNumber) {
-        if (strNumber == null || strNumber.isEmpty()) {
-            return true;
-        }
+    @RequestMapping("/multiplication/{numberOne}/{numberTwo}")
+    public Double multiplication(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws UnsupportedMathOperationException {
+        return service.multiply(numberOne, numberTwo);
+    }
 
-        String number = strNumber.replace(",", ".");
-        return !number.matches("[-+]?[0-9]*\\.?[0-9]+");
+    @RequestMapping("/division/{numberOne}/{numberTwo}")
+    public Double division(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws UnsupportedMathOperationException {
+        return service.divide(numberOne, numberTwo);
+    }
+
+    @RequestMapping("/mean/{numberOne}/{numberTwo}")
+    public Double mean(
+            @PathVariable("numberOne") String numberOne,
+            @PathVariable("numberTwo") String numberTwo
+    ) throws UnsupportedMathOperationException {
+        return service.mean(numberOne, numberTwo);
+    }
+
+    @RequestMapping("/squareRoot/{numberOne}")
+    public Double squareRoot(
+            @PathVariable("numberOne") String numberOne
+    ) throws UnsupportedMathOperationException {
+        return service.squareRoot(numberOne);
     }
 }
