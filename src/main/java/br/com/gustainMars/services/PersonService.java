@@ -1,56 +1,54 @@
 package br.com.gustainMars.services;
 
+import br.com.gustainMars.exception.ResourceNotFoundException;
+import br.com.gustainMars.exception.message.PersonExceptionEnum;
 import br.com.gustainMars.model.Person;
+import br.com.gustainMars.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
 public class PersonService {
+    @Autowired
+    PersonRepository repository;
+
     private final AtomicLong counter = new AtomicLong();
 
     private final Logger logger = Logger.getLogger(PersonService.class.getName());
 
     public List<Person> findAll() {
-        List<Person> persons = new ArrayList<Person>();
-        for (int i = 0; i < 8; i++) {
-            persons.add(mock(i));
-        }
-
         logger.info("Listing all persons!");
-        return persons;
+        return repository.findAll();
     }
 
-    public Person findById(String id) {
+    public Person findById(Long id) {
         logger.info("Find one person!");
-        return mock(1);
+        return repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(PersonExceptionEnum.NO_RECORD_FOUND_FOR_ID.getMessage()));
     }
 
     public Person create(Person person) {
-        logger.info("Creating one person!");
-        return person;
+        return repository.save(person);
     }
 
     public Person update(Person person) {
-        logger.info("Updating one person!");
-        return person;
+        Person entity = findById(person.getId());
+        entity.setFirstName(person.getFirstName());
+        entity.setLastName(person.getLastName());
+        entity.setAddress(person.getAddress());
+        entity.setGender(person.getGender());
+        return repository.save(entity);
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
+        Person entity = findById(id);
         logger.info("Deleting one person!");
-    }
-
-    private Person mock(int i) {
-        logger.info("Find one person!");
-        Person person = new Person();
-        person.setId(counter.incrementAndGet());
-        person.setFirstName("Gustavo" +  i);
-        person.setLastName("Marques" + i);
-        person.setAddress("Rua dos testes, " + i);
-        person.setGender("Male");
-        return person;
+        repository.delete(entity);
     }
 }

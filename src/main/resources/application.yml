@@ -1,1 +1,14 @@
-spring.application.name=restApiWithSpring
+spring:
+  application:
+    name: restApiWithSpring
+  datasource:
+    url: jdbc:mysql://localhost:3306/rest_api_spring_gustainmars?useTimezone=true&serverTimezone=UTC
+    username: gpmarques
+    password: Mugiwara1!
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+      show-sql: false
