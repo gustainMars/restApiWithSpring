@@ -1,6 +1,7 @@
 package br.com.gustainMars.controllers;
 
-import br.com.gustainMars.model.Person;
+import br.com.gustainMars.data.dto.v1.PersonDTO;
+import br.com.gustainMars.data.dto.v2.PersonDTOv2;
 import br.com.gustainMars.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,12 +17,12 @@ public class PersonController {
     private PersonService service;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll() {
+    public List<PersonDTO> findAll() {
         return service.findAll();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findById(@PathVariable("id") Long id) {
+    public PersonDTO findById(@PathVariable("id") Long id) {
         return service.findById(id);
     }
 
@@ -29,7 +30,7 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Person create(@RequestBody Person person) {
+    public PersonDTO create(@RequestBody PersonDTO person) {
         return service.create(person);
     }
 
@@ -37,7 +38,7 @@ public class PersonController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public Person update(@RequestBody Person person) {
+    public PersonDTO update(@RequestBody PersonDTO person) {
         return service.update(person);
     }
 
@@ -45,5 +46,33 @@ public class PersonController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/v2", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PersonDTOv2> findAllV2() {
+        return service.findAllV2();
+    }
+
+    @GetMapping(value = "/v2/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonDTOv2 findByIdV2(@PathVariable("id") Long id) {
+        return service.findByIdV2(id);
+    }
+
+    @PostMapping(
+            value = "/v2",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public PersonDTOv2 createV2(@RequestBody PersonDTOv2 person) {
+        return service.create(person);
+    }
+
+    @PutMapping(
+            value = "/v2",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public PersonDTOv2 updateV2(@RequestBody PersonDTOv2 person) {
+        return service.update(person);
     }
 }

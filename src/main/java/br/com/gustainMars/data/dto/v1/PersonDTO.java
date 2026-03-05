@@ -1,6 +1,5 @@
-package br.com.gustainMars.data.dto;
+package br.com.gustainMars.data.dto.v1;
 
-import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 

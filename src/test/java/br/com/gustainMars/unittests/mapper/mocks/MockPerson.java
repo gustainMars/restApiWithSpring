@@ -3,7 +3,7 @@ package br.com.gustainMars.unittests.mapper.mocks;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.gustainMars.data.dto.PersonDTO;
+import br.com.gustainMars.data.dto.v1.PersonDTO;
 import br.com.gustainMars.model.Person;
 
 public class MockPerson {
