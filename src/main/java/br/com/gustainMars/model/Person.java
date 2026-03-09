@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -28,9 +27,6 @@ public class Person implements Serializable {
 
     @Column(nullable = false, length = 6)
     private String gender;
-
-    @Column(nullable = true)
-    private Date birthDay;
 
     public Long getId() {
         return id;
@@ -72,22 +68,14 @@ public class Person implements Serializable {
         this.gender = gender;
     }
 
-    public Date getBirthDay() {
-        return birthDay;
-    }
-
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof Person person)) return false;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getBirthDay(), person.getBirthDay());
+        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender(), getBirthDay());
+        return Objects.hash(getId(), getFirstName(), getLastName(), getAddress(), getGender());
     }
 }
