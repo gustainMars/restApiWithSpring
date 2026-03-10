@@ -1,17 +1,16 @@
-package br.com.gustainMars.data.dto.v1;
+package br.com.gustainMars.data.dto;
 
 import br.com.gustainMars.serializer.GenderSerializer;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "first_name", "last_name", "gender", "address"})
-public class PersonDTO implements Serializable {
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private Long id;

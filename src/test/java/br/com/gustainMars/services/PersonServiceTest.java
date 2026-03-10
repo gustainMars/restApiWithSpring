@@ -1,0 +1,129 @@
+package br.com.gustainMars.services;
+
+import br.com.gustainMars.data.dto.PersonDTO;
+import br.com.gustainMars.model.Person;
+import br.com.gustainMars.repository.PersonRepository;
+import br.com.gustainMars.unittests.mapper.mocks.MockPerson;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(MockitoExtension.class)
+class PersonServiceTest {
+
+    MockPerson input;
+
+    @Mock
+    PersonRepository repository;
+
+    @InjectMocks
+    private PersonService service;
+
+    @BeforeEach
+    void setUp() {
+        input = new MockPerson();
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void findById() {
+        Person person = MockPerson.mockEntity(1);
+        person.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(person));
+        var result = service.findById(1L);
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertLinks(result, person);
+    }
+
+    @Test
+    void create() {
+        Person person = MockPerson.mockEntity(1);
+        Person persisted = person;
+        persisted.setId(1L);
+        PersonDTO dto = input.mockDTO(1);
+        when(repository.save(person)).thenReturn(persisted);
+        var result = service.create(dto);
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertLinks(result, person);
+    }
+
+    @Test
+    void update() {
+        Person person = MockPerson.mockEntity(1);
+        Person persisted = person;
+        persisted.setId(1L);
+        PersonDTO dto = input.mockDTO(1);
+        when(repository.findById(1L)).thenReturn(Optional.of(person));
+        when(repository.save(person)).thenReturn(persisted);
+        var result = service.update(dto);
+        assertNotNull(result);
+        assertNotNull(result.getId());
+        assertLinks(result, person);
+    }
+
+    @Test
+    void delete() {
+        Person person = MockPerson.mockEntity(1);
+        person.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(person));
+        service.delete(1L);
+        verify(repository, times(1)).findById(anyLong());
+        verify(repository, times(1)).delete(any(Person.class));
+        verifyNoMoreInteractions(repository);
+    }
+
+    @Test
+    void findAll() {
+
+    }
+
+    void assertLinks(PersonDTO result, Person person) {
+        assertNotNull(result.getLinks());
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("self")
+                        && link.getHref().endsWith("/person/1")
+                        && link.getType().equals("GET"))
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("findAll")
+                        && link.getHref().endsWith("/person")
+                        && link.getType().equals("GET"))
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("create")
+                        && link.getHref().endsWith("/person")
+                        && link.getType().equals("POST"))
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("update")
+                        && link.getHref().endsWith("/person")
+                        && link.getType().equals("PUT"))
+        );
+
+        assertNotNull(result.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("delete")
+                        && link.getHref().endsWith("/person/1")
+                        && link.getType().equals("DELETE"))
+        );
+
+        assertEquals(MockPerson.mockEntity(1).getFirstName(), person.getFirstName());
+        assertEquals(MockPerson.mockEntity(1).getLastName(), person.getLastName());
+        assertEquals(MockPerson.mockEntity(1).getAddress(), person.getAddress());
+    }
+}

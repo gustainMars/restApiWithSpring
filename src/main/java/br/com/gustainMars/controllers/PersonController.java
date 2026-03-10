@@ -1,6 +1,6 @@
 package br.com.gustainMars.controllers;
 
-import br.com.gustainMars.data.dto.v1.PersonDTO;
+import br.com.gustainMars.data.dto.PersonDTO;
 import br.com.gustainMars.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
